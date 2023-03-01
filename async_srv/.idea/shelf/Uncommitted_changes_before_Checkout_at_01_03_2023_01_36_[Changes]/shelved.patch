@@ -1,0 +1,66 @@
+Index: ../client-server/client_2.py
+===================================================================
+diff --git a/../client-server/client_2.py b/../client-server/client_2.py
+--- a/../client-server/client_2.py	
++++ b/../client-server/client_2.py	
+@@ -2,31 +2,29 @@
+ import sys
+ import time
+ 
++
+ SERVER_HOST = "127.0.0.1"
+ SERVER_PORT = 5678
+ 
+ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ sock.connect((SERVER_HOST, SERVER_PORT))
+ 
+-message_in = sys.stdin
+-message_out = sys.stdout
++
+ 
+ while True:
+     try:
+-        for mes in message_in:
+-            sock.sendall(mes.encode('utf-8'))    #отправка данных в сокет
+-            data = sock.recv(2048)               #получение данных из сокета
+-            message = data.decode('utf-8')
+-            for mesg in message:
+-                   message_out.flush()
+-                   time.sleep(0.5)
+-                   message_out.write(mesg)
++         for mes in sys.stdin:
++                sock.sendall(mes.encode('utf-8'))    #отправка данных в сокет
++                data = sock.recv(2 ** 16)            #получение данных из сокета
++                message = data.decode('utf-8')
++                sys.stdout.write(message)
++
++         time.sleep(5)
++         print("Введите имя:")
++
++
+ 
+ 
+     except KeyboardInterrupt:
+-        sock.close()
+-        sys.exit()
+-
+-
+-# падает по:
+-# ConnectionAbortedError: [WinError 10053] Программа на вашем хост-компьютере разорвала установленное подключение
+\ No newline at end of file
++           sock.close()
++           sys.exit()
+Index: ../client-server/client_1.py
+===================================================================
+diff --git a/../client-server/client_1.py b/../client-server/client_1.py
+--- a/../client-server/client_1.py	
++++ b/../client-server/client_1.py	
+@@ -6,7 +6,7 @@
+ 
+ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ sock.connect((SERVER_HOST,SERVER_PORT))
+-name = input("Введите свое имя:")
++name = input("Введите свое имя:  ")
+ 
+ sock.send(name.encode())
+ responce = sock.recv(2**16)
